@@ -1,0 +1,176 @@
+.meal-details-container {
+  min-height: 100vh;
+  background: #1a1a1a;
+  color: #ffffff;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  padding-bottom: 50px;
+}
+
+/* Back Button */
+.back-btn {
+  background: #2c5aa0;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  margin: 20px;
+  transition: all 0.3s ease;
+}
+.back-btn:hover {
+  background: #3d7bd9;
+}
+
+/* Header Section */
+.meal-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  align-items: center;
+}
+
+.meal-image-container {
+  flex: 1 1 400px;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6);
+  position: relative;
+}
+.meal-hero-image {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+.meal-overlay {
+  position: absolute;
+  bottom: 10px;
+  left: 10px;
+}
+.meal-badges span {
+  background: rgba(0, 0, 0, 0.7);
+  color: #fff;
+  margin-right: 8px;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-size: 12px;
+}
+
+.meal-hero-content {
+  flex: 1 1 400px;
+}
+.meal-title {
+  font-size: 2.2rem;
+  font-weight: 700;
+  margin-bottom: 20px;
+}
+.meta-item {
+  margin-bottom: 10px;
+}
+.meta-label {
+  font-weight: 600;
+  margin-right: 8px;
+  color: #aaa;
+}
+
+/* Favorite Button */
+.favorite-btn-hero {
+  margin-top: 20px;
+  background: #ff6b6b;
+  padding: 12px 24px;
+  border-radius: 30px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+.favorite-btn-hero:hover {
+  background: #e74c3c;
+}
+
+/* Main Content */
+.main-content {
+  background: #2b2b2b;
+  border-radius: 20px;
+  margin: 30px auto;
+  padding: 30px;
+  max-width: 1200px;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 30px;
+  margin-bottom: 40px;
+}
+
+/* Sections */
+.section-title {
+  font-size: 20px;
+  margin-bottom: 15px;
+  color: #fff;
+}
+
+/* Ingredients */
+.ingredients-section,
+.instructions-section {
+  background: #1e1e1e;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+}
+.ingredient-item {
+  background: #2b2b2b;
+  padding: 10px 15px;
+  border-radius: 8px;
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: space-between;
+  color: #fff;
+}
+.instruction-step {
+  margin-bottom: 15px;
+  background: #2b2b2b;
+  padding: 15px;
+  border-radius: 8px;
+  color: #ddd;
+}
+.step-number {
+  font-weight: bold;
+  margin-bottom: 5px;
+  color: #ffcc00;
+}
+
+/* Video */
+.video-section {
+  margin-top: 40px;
+}
+.video-container {
+  position: relative;
+  padding-top: 56.25%;
+}
+.video-iframe {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  /* margin-bottom: 50px; */
+  border-radius: 12px;
+}
+
+/* Links */
+.source-link {
+  margin-top: 30px;
+}
+.external-link {
+  color: #3d7bd9;
+  font-weight: 600;
+}
+.external-link:hover {
+  text-decoration: underline;
+}

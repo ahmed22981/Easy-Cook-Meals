@@ -1,0 +1,55 @@
+.about-wrapper {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  color: #fff;
+  background: linear-gradient(135deg, #1a1a1a, #2d2d2d);
+  border-radius: 12px;
+  text-align: center;
+}
+
+.title {
+  font-size: 2rem;
+  margin-bottom: 15px;
+  color: #0daad3;
+}
+
+.intro {
+  font-size: 1.1rem;
+  color: #ddd;
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.about-section {
+  margin-bottom: 25px;
+}
+
+.section-title {
+  font-size: 1.4rem;
+  margin-bottom: 10px;
+  color: #0daad3;
+}
+
+.about-section p {
+  font-size: 1rem;
+  color: #ccc;
+  line-height: 1.5;
+}
+
+.back-btn {
+  margin-top: 25px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background: #0dabd2;
+  color: #1a1a1a;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.back-btn:hover {
+  background: #0b73eb;
+  transform: translateY(-2px);
+}

@@ -1,0 +1,294 @@
+<!-- Register/Login Component Template -->
+<div class="auth-container">
+  <!-- Background Elements -->
+  <div class="background-decoration">
+    <div class="floating-shape shape-1"></div>
+    <div class="floating-shape shape-2"></div>
+    <div class="floating-shape shape-3"></div>
+    <div class="gradient-orb orb-1"></div>
+    <div class="gradient-orb orb-2"></div>
+  </div>
+
+  <!-- Main Content -->
+  <div class="auth-content">
+    <!-- Left Panel - Brand Info -->
+    <div class="brand-panel">
+      <div class="brand-content">
+        <div class="logo-section">
+          <h1 class="brand-title">Easy Cook</h1>
+          <div class="brand-tagline">
+            <span class="highlight">Fresh Ingredients,</span>
+            <span class="highlight">Easy Recipes,</span>
+            <span class="highlight">Tasty Results!</span>
+          </div>
+        </div>
+
+        <div class="features-list">
+          <div class="feature-item">
+            <div class="feature-text">
+              <h4>Easy Cooking</h4>
+              <p>Simple step-by-step recipes for everyone</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-text">
+              <h4>Fresh Ingredients</h4>
+              <p>Quality ingredients for the best taste</p>
+            </div>
+          </div>
+          <div class="feature-item">
+            <div class="feature-text">
+              <h4>Favorite Meals</h4>
+              <p>Save and organize your favorite recipes</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Panel - Auth Form -->
+    <div class="form-panel">
+      <div class="form-container">
+        <!-- Form Header -->
+        <div class="form-header">
+          <h2 class="form-title">{{ modeTitle() }}</h2>
+          <p class="form-subtitle">{{ modeSubtitle() }}</p>
+        </div>
+
+        <!-- Error Message -->
+        <div class="error-message" *ngIf="error">
+          <div class="error-content">
+            <span class="error-icon"></span>
+            <span>{{ error }}</span>
+          </div>
+        </div>
+
+        <!-- Login Form -->
+        <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
+          <div class="form-group">
+            <label for="login-username" class="form-label">Username</label>
+            <div class="input-wrapper">
+              <input
+                id="login-username"
+                type="text"
+                formControlName="username"
+                class="form-input"
+                [class.error]="isFieldInvalid(loginForm, 'username')"
+                placeholder="Enter your username"
+                autocomplete="username"
+              />
+            </div>
+            <div class="field-error" *ngIf="isFieldInvalid(loginForm, 'username')">
+              {{ getFieldError(loginForm, 'username') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="login-password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <input
+                id="login-password"
+                [type]="passwordVisible ? 'text' : 'password'"
+                formControlName="password"
+                class="form-input"
+                [class.error]="isFieldInvalid(loginForm, 'password')"
+                placeholder="Enter your password"
+                autocomplete="current-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+                [attr.aria-label]="passwordVisible ? 'Hide password' : 'Show password'"
+              ></button>
+            </div>
+            <div class="field-error" *ngIf="isFieldInvalid(loginForm, 'password')">
+              {{ getFieldError(loginForm, 'password') }}
+            </div>
+          </div>
+
+          <div class="form-options">
+            <label class="checkbox-container">
+              <input type="checkbox" formControlName="rememberMe" />
+              <span class="checkmark"></span>
+              <span class="checkbox-text">Remember me</span>
+            </label>
+          </div>
+
+          <button
+            type="submit"
+            class="submit-button"
+            [class.loading]="loading"
+            [disabled]="loading"
+          >
+            <span *ngIf="!loading">{{ submitButtonText() }}</span>
+            <span *ngIf="loading" class="loading-content">
+              <span class="spinner"></span>
+              Signing in...
+            </span>
+          </button>
+        </form>
+
+        <!-- Signup Form -->
+        <form *ngIf="!isLogin" [formGroup]="signupForm" (ngSubmit)="onSignup()" class="auth-form">
+          <div class="form-row">
+            <div class="form-group">
+              <label for="firstName" class="form-label">First Name</label>
+              <div class="input-wrapper">
+                <input
+                  id="firstName"
+                  type="text"
+                  formControlName="firstName"
+                  class="form-input"
+                  [class.error]="isFieldInvalid(signupForm, 'firstName')"
+                  placeholder="First name"
+                  autocomplete="given-name"
+                />
+              </div>
+              <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'firstName')">
+                {{ getFieldError(signupForm, 'firstName') }}
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="lastName" class="form-label">Last Name</label>
+              <div class="input-wrapper">
+                <input
+                  id="lastName"
+                  type="text"
+                  formControlName="lastName"
+                  class="form-input"
+                  [class.error]="isFieldInvalid(signupForm, 'lastName')"
+                  placeholder="Last name"
+                  autocomplete="family-name"
+                />
+              </div>
+              <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'lastName')">
+                {{ getFieldError(signupForm, 'lastName') }}
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-username" class="form-label">Username</label>
+            <div class="input-wrapper">
+              <input
+                id="signup-username"
+                type="text"
+                formControlName="username"
+                class="form-input"
+                [class.error]="isFieldInvalid(signupForm, 'username')"
+                placeholder="Choose a username"
+                autocomplete="username"
+              />
+            </div>
+            <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'username')">
+              {{ getFieldError(signupForm, 'username') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="email" class="form-label">Email Address</label>
+            <div class="input-wrapper">
+              <input
+                id="email"
+                type="email"
+                formControlName="email"
+                class="form-input"
+                [class.error]="isFieldInvalid(signupForm, 'email')"
+                placeholder="Enter your email"
+                autocomplete="email"
+              />
+            </div>
+            <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'email')">
+              {{ getFieldError(signupForm, 'email') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="gender" class="form-label">Gender</label>
+            <div class="select-wrapper">
+              <select id="gender" formControlName="gender" class="form-select">
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+              <span class="select-arrow">▼</span>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="signup-password" class="form-label">Password</label>
+            <div class="input-wrapper">
+              <input
+                id="signup-password"
+                [type]="passwordVisible ? 'text' : 'password'"
+                formControlName="password"
+                class="form-input"
+                [class.error]="isFieldInvalid(signupForm, 'password')"
+                placeholder="Create a password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="togglePasswordVisibility()"
+              ></button>
+            </div>
+            <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'password')">
+              {{ getFieldError(signupForm, 'password') }}
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="confirmPassword" class="form-label">Confirm Password</label>
+            <div class="input-wrapper">
+              <input
+                id="confirmPassword"
+                [type]="confirmPasswordVisible ? 'text' : 'password'"
+                formControlName="confirmPassword"
+                class="form-input"
+                [class.error]="
+                  isFieldInvalid(signupForm, 'confirmPassword') || getPasswordMatchError()
+                "
+                placeholder="Confirm your password"
+                autocomplete="new-password"
+              />
+              <button
+                type="button"
+                class="toggle-password"
+                (click)="toggleConfirmPasswordVisibility()"
+              ></button>
+            </div>
+            <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'confirmPassword')">
+              {{ getFieldError(signupForm, 'confirmPassword') }}
+            </div>
+            <div class="field-error" *ngIf="getPasswordMatchError()">
+              {{ getPasswordMatchError() }}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            class="submit-button"
+            [class.loading]="loading"
+            [disabled]="loading"
+          >
+            <span *ngIf="!loading">{{ submitButtonText() }}</span>
+            <span *ngIf="loading" class="loading-content">
+              <span class="spinner"></span>
+              Creating account...
+            </span>
+          </button>
+        </form>
+
+        <!-- Mode Toggle -->
+        <div class="form-footer">
+          <button type="button" class="toggle-mode-button" (click)="toggleMode()">
+            {{ toggleText() }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

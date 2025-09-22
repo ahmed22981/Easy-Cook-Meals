@@ -1,0 +1,279 @@
+<div class="favorites-page">
+  <section class="favorites-header py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <div class="header-content">
+            <h1 class="page-title mb-3">
+              <i class="fa-solid fa-star star-icon me-3"></i>
+              My Favorites
+            </h1>
+            <p class="page-subtitle mb-0" *ngIf="isAuthenticated()">
+              Welcome back, <span class="user-name">{{ getUserDisplayName() }}</span
+              >! Here are your saved favorite meals.
+            </p>
+            <p class="page-subtitle mb-0" *ngIf="!isAuthenticated()">
+              Your personal collection of favorite recipes
+            </p>
+          </div>
+        </div>
+        <div class="col-md-4 text-md-end mt-3 mt-md-0">
+          <div class="header-actions">
+            <div class="favorites-count-badge mb-3" *ngIf="favoritesCount() > 0">
+              <span class="count-number">{{ favoritesCount() }}</span>
+              <span class="count-text">{{
+                favoritesCount() === 1 ? 'Favorite' : 'Favorites'
+              }}</span>
+            </div>
+
+            <div class="action-buttons">
+              <button
+                class="btn btn-outline-primary me-2"
+                (click)="exploreMeals()"
+                title="Explore more meals"
+              >
+                <i class="bi bi-collection me-1"></i>
+                Explore Meals
+              </button>
+              <button
+                class="btn btn-danger"
+                *ngIf="favoritesCount() > 0"
+                (click)="clearAllFavorites()"
+                title="Clear all favorites"
+              >
+                <i class="bi bi-trash me-1"></i>
+                Clear All
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="favorites-content py-5">
+    <div class="container">
+      <div *ngIf="loading()" class="loading-container text-center py-5">
+        <div class="loading-spinner">
+          <div class="spinner-border text-warning mb-3" style="width: 3rem; height: 3rem">
+            <span class="visually-hidden">Loading favorites...</span>
+          </div>
+        </div>
+        <h5 class="loading-title">Loading your favorites...</h5>
+        <p class="loading-text text-muted">Please wait while we fetch your saved meals</p>
+      </div>
+
+      <div *ngIf="error() && !loading()" class="error-container text-center py-5">
+        <div class="error-content">
+          <div class="error-icon mb-4">😞</div>
+          <h4 class="error-title text-danger mb-3">Something went wrong</h4>
+          <p class="error-message text-muted mb-4">{{ error() }}</p>
+          <div class="error-actions">
+            <button class="btn btn-primary me-2" (click)="retryLoading()">
+              <i class="bi bi-arrow-clockwise me-1"></i>
+              Try Again
+            </button>
+            <button class="btn btn-outline-secondary" (click)="exploreMeals()">
+              <i class="bi bi-house me-1"></i>
+              Go to Meals
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="isEmpty() && !loading() && !error()" class="empty-state text-center py-5">
+        <div class="empty-content">
+          <div class="empty-icon mb-4">
+            <i class="fa-regular fa-star empty-star"></i>
+          </div>
+          <h3 class="empty-title mb-3">No favorites yet</h3>
+          <p class="empty-message text-muted mb-4">
+            Start exploring delicious meals and save your favorites by clicking the star icon!
+          </p>
+          <div class="empty-actions">
+            <button class="btn btn-primary btn-lg me-3" (click)="exploreMeals()">
+              <i class="bi bi-collection me-2"></i>
+              Explore Meals
+            </button>
+            <button class="btn btn-outline-primary btn-lg" routerLink="/" fragment="categories">
+              <i class="bi bi-grid me-2"></i>
+              Browse Categories
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="!loading() && !error() && !isEmpty()" class="favorites-grid">
+        <div class="grid-header mb-4">
+          <div class="row align-items-center">
+            <div class="col-md-8">
+              <h3 class="grid-title mb-2">
+                Your Favorite Meals
+                <span class="badge bg-warning text-dark ms-2">{{ favoritesCount() }}</span>
+              </h3>
+              <p class="grid-subtitle text-muted mb-0">
+                Click on any meal to view the full recipe and cooking instructions
+              </p>
+            </div>
+            <div class="col-md-4 text-md-end mt-3 mt-md-0">
+              <div class="grid-actions">
+                <button
+                  class="btn btn-sm btn-outline-danger"
+                  (click)="clearAllFavorites()"
+                  title="Remove all favorites"
+                >
+                  <i class="bi bi-trash me-1"></i>
+                  Clear All
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="row g-4">
+          <div
+            *ngFor="let meal of favoriteMeals(); trackBy: trackByMealId"
+            class="col-sm-6 col-md-4 col-lg-3"
+          >
+            <div class="meal-card card h-100 shadow-sm favorite-meal-card">
+              <div class="card-img-container position-relative">
+                <img
+                  [src]="meal.strMealThumb"
+                  [alt]="meal.strMeal"
+                  class="card-img-top meal-image"
+                  loading="lazy"
+                  (error)="onImageError($event)"
+                  (click)="viewMealDetails(meal)"
+                />
+
+                <div class="favorite-badge position-absolute">
+                  <i class="fa-solid fa-star text-warning"></i>
+                </div>
+
+                <!-- <button
+                  class="btn btn-sm btn-danger remove-favorite-btn position-absolute"
+                  (click)="removeFavorite(meal, $event)"
+                  title="Remove from favorites"
+                ></button> -->
+
+                <div *ngIf="hasVideo(meal)" class="video-badge position-absolute">
+                  <i class="bi bi-play-circle-fill"></i>
+                </div>
+
+                <div
+                  class="card-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                >
+                  <button class="btn btn-primary btn-view-recipe" (click)="viewMealDetails(meal)">
+                    <i class="bi bi-book me-1"></i>
+                    View Recipe
+                  </button>
+                </div>
+              </div>
+
+              <div class="card-body d-flex flex-column">
+                <h5
+                  class="card-title meal-title mb-2"
+                  (click)="viewMealDetails(meal)"
+                  title="{{ meal.strMeal }}"
+                >
+                  {{ meal.strMeal }}
+                </h5>
+
+                <div class="meal-info mb-3">
+                  <div class="info-item mb-1">
+                    <i class="bi bi-geo-alt text-muted me-1"></i>
+                    <span class="text-muted small">{{ meal.strArea }}</span>
+                  </div>
+                  <div class="info-item mb-1">
+                    <i class="bi bi-collection text-muted me-1"></i>
+                    <span class="text-muted small">{{ meal.strCategory }}</span>
+                  </div>
+                </div>
+
+                <p class="card-text text-muted small flex-grow-1">
+                  {{ truncateText(meal.strInstructions, 120) }}
+                </p>
+
+                <div class="meal-tags mb-3" *ngIf="getMealTags(meal).length > 0">
+                  <span
+                    *ngFor="let tag of getMealTags(meal).slice(0, 2)"
+                    class="badge bg-light text-dark me-1 mb-1"
+                  >
+                    {{ tag }}
+                  </span>
+                  <span *ngIf="getMealTags(meal).length > 2" class="badge bg-secondary">
+                    +{{ getMealTags(meal).length - 2 }} more
+                  </span>
+                </div>
+
+                <div class="card-actions mt-auto">
+                  <div class="row g-2">
+                    <div class="col-8">
+                      <button class="btn btn-primary btn-sm w-100" (click)="viewMealDetails(meal)">
+                        <i class="bi bi-book me-1"></i>
+                        View Recipe
+                      </button>
+                    </div>
+                    <div class="col-4">
+                      <button
+                        class="btn btn-outline-danger btn-sm w-100"
+                        (click)="removeFavorite(meal, $event)"
+                        title="Remove from favorites"
+                      >
+                        Remove
+                        <i class="bi bi-heart-fill"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card-footer bg-transparent border-0 pt-0">
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">
+                    <i class="bi bi-clock me-1"></i>
+                    Added to favorites
+                  </small>
+                  <button
+                    class="btn btn-sm btn-outline-primary"
+                    (click)="exploreCategory(meal.strCategory)"
+                    title="Explore more {{ meal.strCategory }} meals"
+                  >
+                    Explore More Meals
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="suggestions-section py-5 bg-light" *ngIf="!loading() && favoritesCount() > 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 mx-auto text-center">
+          <h3 class="suggestions-title mb-4">
+            <i class="bi bi-lightbulb me-2"></i>
+            Discover More Amazing Recipes
+          </h3>
+          <p class="suggestions-text text-muted mb-4">
+            Since you love these meals, you might also enjoy exploring similar categories or
+            discovering new cuisines from around the world.
+          </p>
+          <div class="suggestions-actions">
+            <button class="btn btn-primary btn-lg me-3" (click)="exploreMeals()">
+              <i class="bi bi-collection me-2"></i>
+              Explore All Meals
+            </button>
+            <button class="btn btn-outline-primary btn-lg" routerLink="/" fragment="categories">
+              <i class="bi bi-grid me-2"></i>
+              Browse Categories
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>

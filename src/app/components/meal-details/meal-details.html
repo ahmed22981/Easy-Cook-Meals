@@ -1,0 +1,147 @@
+<div class="meal-details-container">
+  <!-- Loading State -->
+  <div *ngIf="loading$ | async" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading meal details...</p>
+  </div>
+
+  <!-- Error State -->
+  <div *ngIf="error && !(loading$ | async)" class="error-container">
+    <div class="error-icon">⚠️</div>
+    <h3 class="error-title">{{ error }}</h3>
+    <button class="back-btn" (click)="goBack()">
+      <i class="fa fa-arrow-left"></i>
+      Back to Meals
+    </button>
+  </div>
+
+  <!-- Meal Details Content -->
+  <div *ngIf="meal && !(loading$ | async)" class="meal-details-content">
+    <!-- Header Section -->
+    <div class="header-section">
+      <button class="back-btn" (click)="goBack()">
+        <i class="fa fa-arrow-left"></i>
+        Back to Meals
+      </button>
+
+      <div class="meal-hero">
+        <div class="meal-image-container" appFadeIn>
+          <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meal-hero-image" appFadeIn />
+          <div class="meal-overlay">
+            <div class="meal-badges">
+              <span class="meal-category-badge">{{ meal.strCategory }}</span>
+              <span class="meal-country-badge">
+                <span class="country-flag">🌍</span>
+                {{ meal.strArea }}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="meal-hero-content">
+          <h1 class="meal-title">{{ meal.strMeal }}</h1>
+
+          <div class="meal-meta">
+            <div class="meta-item">
+              <span class="meta-label">Category:</span>
+              <span class="meta-value">{{ meal.strCategory }}</span>
+            </div>
+            <div class="meta-item">
+              <span class="meta-label">Origin:</span>
+              <span class="meta-value">{{ meal.strArea }}</span>
+            </div>
+            <div *ngIf="getTags().length > 0" class="meta-item">
+              <span class="meta-label">Tags:</span>
+              <div class="tags-container">
+                <span *ngFor="let tag of getTags()" class="tag">{{ tag }}</span>
+              </div>
+            </div>
+          </div>
+
+          <button
+            class="favorite-btn-hero"
+            [class.active]="meal.isFavorite"
+            (click)="toggleFavorite()"
+          >
+            <span class="heart-icon">{{ meal.isFavorite ? '❤️' : '🤍' }}</span>
+            {{ meal.isFavorite ? 'Remove from Favorites' : 'Add to Favorites' }}
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content Section -->
+    <div class="main-content">
+      <div class="content-grid">
+        <!-- Ingredients Section -->
+        <div class="ingredients-section">
+          <h2 class="section-title">
+            <span class="section-icon">🥗</span>
+            Ingredients
+          </h2>
+          <div class="ingredients-list">
+            <div
+              *ngFor="let ingredient of ingredients; let i = index"
+              class="ingredient-item"
+              [style.animation-delay]="i * 0.1 + 's'"
+            >
+              <span class="ingredient-measure">{{ ingredient.measure }}</span>
+              <span class="ingredient-name">{{ ingredient.name }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instructions Section -->
+        <div class="instructions-section">
+          <h2 class="section-title">
+            <span class="section-icon">👨‍🍳</span>
+            Instructions
+          </h2>
+          <div class="instructions-content">
+            <div
+              *ngFor="let step of getInstructionSteps(); let i = index"
+              class="instruction-step"
+              [style.animation-delay]="i * 0.1 + 's'"
+            >
+              <div class="step-number">{{ i + 1 }}</div>
+              <div class="step-content">{{ step }}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video Section -->
+      <div *ngIf="youtubeUrl" class="video-section">
+        <h2 class="section-title">
+          <span class="section-icon">📺</span>
+          Watch How to Make It
+        </h2>
+        <div class="video-container">
+          <iframe
+            [src]="youtubeUrl"
+            frameborder="0"
+            allowfullscreen
+            class="video-iframe"
+            title="Recipe Video"
+          ></iframe>
+        </div>
+      </div>
+
+      <!-- Additional Info Section -->
+      <div class="additional-info">
+        <div *ngIf="meal.strSource" class="source-link">
+          <h3 class="info-title">Original Recipe Source</h3>
+          <a
+            [href]="meal.strSource"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="external-link"
+          >
+            <i class="fa fa-external-link-alt"></i>
+            View Original Recipe
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

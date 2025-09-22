@@ -1,0 +1,46 @@
+<!-- Start Header -->
+<header>
+  <div class="container">
+    <a routerLink="" class="logo"> Easy cook </a>
+    <nav>
+      <li class="fas fa-bars toggle-menu"></li>
+      <ul>
+        <li><a routerLink="">Home</a></li>
+        <li><a routerLink="meals">Meals</a></li>
+        <li><a routerLink="aboutus">About Us</a></li>
+
+        <li *ngIf="!isLoggedIn">
+          <button class="auth-btn login-btn" routerLink="register">Login</button>
+        </li>
+        <li *ngIf="isLoggedIn">
+          <button class="auth-btn logout-btn" (click)="logout()">Logout</button>
+        </li>
+      </ul>
+      <div class="form">
+        <a routerLink="favorites">
+          <i class="fa-regular fa-star"></i>
+        </a>
+      </div>
+    </nav>
+  </div>
+</header>
+<!-- End Header -->
+
+<div class="landing">
+  <div class="overlay"></div>
+  <div class="text" #landingText>
+    <div class="content">
+      <h2>Discover Delicious Meals Everyday. Fresh Ingredients, Easy Recipes, Tasty Results!</h2>
+      <p>
+        Explore a wide variety of meals from around the world. find the ingredients you need and
+        follow simple steps to cook like a pro
+      </p>
+      <button>
+        <a class="discover-meals" routerLink="meals">Get your meal</a>
+      </button>
+    </div>
+  </div>
+</div>
+
+<app-categories></app-categories>
+<!-- End Landing -->

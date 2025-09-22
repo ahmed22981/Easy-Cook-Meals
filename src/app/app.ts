@@ -1,12 +1,19 @@
+// src/app/app.component.ts
 import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
-
+import { Router, RouterOutlet } from '@angular/router';
+import { Footer } from './components/footer/footer';
+import { Navbar } from './components/navbar/navbar';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
   templateUrl: './app.html',
-  styleUrl: './app.css'
+  styleUrls: ['./app.css'],
+  standalone: true,
+  imports: [Navbar, RouterOutlet, Footer],
 })
-export class App {
+export class AppComponent {
   protected readonly title = signal('meals');
+  constructor(private router: Router) {}
+  showNavbar(): boolean {
+    return this.router.url !== '/';
+  }
 }

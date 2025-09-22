@@ -1,0 +1,177 @@
+<div class="meals-container">
+  <!-- Header Section -->
+  <div class="header-section">
+    <div class="header-content">
+      <h1 class="page-title">Discover Delicious Meals</h1>
+      <p class="page-subtitle">Explore a wide variety of meals from around the world</p>
+    </div>
+  </div>
+
+  <!-- Search and Filters Section -->
+  <div class="search-filter-section">
+    <div class="search-container">
+      <!-- Main Search Input -->
+      <div class="search-input-wrapper">
+        <input
+          type="text"
+          class="search-input"
+          placeholder="Search by meal name or country..."
+          [(ngModel)]="searchTerm"
+          (input)="onSearchChange()"
+        />
+        <i class="search-icon"><i class="fa-light fa-magnifying-glass"></i></i>
+      </div>
+
+      <!-- Filter Controls -->
+      <div class="filters-wrapper">
+        <!-- Country Filter -->
+        <div class="filter-group">
+          <select class="filter-select" [(ngModel)]="selectedCountry" (change)="onCountryChange()">
+            <option value="">All Countries</option>
+            <option *ngFor="let country of countries" [value]="country">
+              {{ country }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Category Filter -->
+        <div class="filter-group">
+          <select
+            class="filter-select"
+            [(ngModel)]="selectedCategory"
+            (change)="onCategoryChange()"
+          >
+            <option value="">All Categories</option>
+            <option *ngFor="let category of categories" [value]="category">
+              {{ category }}
+            </option>
+          </select>
+        </div>
+
+        <!-- Clear Filters Button -->
+        <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+      </div>
+    </div>
+
+    <!-- Results Info -->
+    <div class="results-info">
+      <span class="results-count">{{ meals.length }} meals found</span>
+      <span class="page-info">Page {{ currentPage }} of {{ totalPages }}</span>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-container">
+    <div class="loading-spinner"></div>
+    <p class="loading-text">Loading delicious meals...</p>
+  </div>
+
+  <!-- Meals Grid -->
+  <div *ngIf="!loading" class="meals-grid">
+    <div
+      *ngFor="let meal of paginatedMeals; trackBy: trackByMeal"
+      appMealBox
+      class="meal-card"
+      (click)="viewMealDetails(meal)"
+    >
+      <!-- Meal Image -->
+      <div class="meal-image-container">
+        <img [src]="meal.strMealThumb" [alt]="meal.strMeal" class="meal-image" loading="lazy" />
+        <div class="meal-overlay">
+          <span class="meal-category">{{ meal.strCategory }}</span>
+        </div>
+      </div>
+
+      <!-- Meal Content -->
+      <div class="meal-content">
+        <!-- Meal Header -->
+        <div class="meal-header">
+          <h3 class="meal-title">{{ meal.strMeal }}</h3>
+          <div class="meal-country">
+            <span class="country-flag">🌍</span>
+            <span class="country-name">{{ meal.strArea }}</span>
+          </div>
+        </div>
+
+        <!-- Meal Description -->
+        <p class="meal-description">
+          {{ getShortDescription(meal.strInstructions) }}
+        </p>
+
+        <!-- Meal Actions -->
+        <div class="meal-actions">
+          <button
+            class="favorite-btn"
+            [class.active]="meal.isFavorite"
+            (click)="toggleFavorite(meal); $event.stopPropagation()"
+            [attr.aria-label]="meal.isFavorite ? 'Remove from favorites' : 'Add to favorites'"
+          >
+            <span class="heart-icon">{{ meal.isFavorite ? '❤️' : '🤍' }}</span>
+            <span class="favorite-text">
+              {{ meal.isFavorite ? 'Favorited' : 'Add to Favorites' }}
+            </span>
+          </button>
+
+          <button
+            class="view-details-btn"
+            (click)="viewMealDetails(meal); $event.stopPropagation()"
+            aria-label="View meal details"
+          >
+            <span class="details-icon"><i class="fa fa-eye"></i></span>
+            <span class="details-text">View Details</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && paginatedMeals.length === 0" class="empty-state">
+    <div class="empty-icon">🍽️</div>
+    <h3 class="empty-title">No meals found</h3>
+    <p class="empty-description">
+      Try adjusting your search criteria or clear the filters to see more results.
+    </p>
+    <button class="clear-filters-btn" (click)="clearFilters()">Clear Filters</button>
+  </div>
+
+  <!-- Pagination -->
+  <div *ngIf="!loading && totalPages > 1" class="pagination-container">
+    <div class="pagination">
+      <!-- Previous Button -->
+      <button class="pagination-btn prev-btn" [disabled]="currentPage === 1" (click)="prevPage()">
+        ← Previous
+      </button>
+
+      <!-- Page Numbers -->
+      <div class="pagination-numbers">
+        <button
+          *ngFor="let page of getPaginationNumbers()"
+          class="pagination-number"
+          [class.active]="page === currentPage"
+          [class.dots]="page === -1"
+          [disabled]="page === -1"
+          (click)="page !== -1 && goToPage(page)"
+        >
+          {{ page === -1 ? '...' : page }}
+        </button>
+      </div>
+
+      <!-- Next Button -->
+      <button
+        class="pagination-btn next-btn"
+        [disabled]="currentPage === totalPages"
+        (click)="nextPage()"
+      >
+        Next →
+      </button>
+    </div>
+
+    <!-- Pagination Info -->
+    <div class="pagination-info">
+      Showing {{ (currentPage - 1) * itemsPerPage + 1 }} -
+      {{ Math.min(currentPage * itemsPerPage, meals.length) }}
+      of {{ meals.length }} meals
+    </div>
+  </div>
+</div>

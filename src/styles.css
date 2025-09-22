@@ -1,1 +1,70 @@
 /* You can add global styles to this file, and also import other style files */
+:root {
+  --main-color: #19c8fa;
+  --transparent-color: rgb(15 116 143 / 70%);
+  --section-padding: 50px;
+}
+* {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+html {
+  scroll-behavior: smooth;
+}
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+ul {
+  list-style: none;
+}
+.container {
+  padding-left: 15px;
+  padding-right: 15px;
+  margin-left: auto;
+  margin-right: auto;
+}
+/* Start Components */
+.main-heading {
+  padding: 40px;
+  text-align: center;
+}
+.main-heading h3 {
+  font-size: 40px;
+  font-weight: normal;
+  text-transform: uppercase;
+  margin-bottom: 70px;
+  position: relative;
+}
+.main-heading h3::before {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 2px;
+  bottom: -25px;
+  background-color: #333;
+}
+.main-heading h3::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid #333;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  bottom: -32px;
+  background-color: white;
+}
+.main-heading p {
+  width: 550px;
+  margin: 0 auto 70px;
+  max-width: 100%;
+  line-height: 2;
+  color: #777;
+}
+/* End Components */

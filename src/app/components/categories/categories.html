@@ -1,0 +1,181 @@
+<!-- Categories Slider Section -->
+<section class="categories-section py-5">
+  <div class="container">
+    <!-- Section Header -->
+    <div class="text-center mb-5">
+      <h2 class="section-title mb-3">
+        <span class="title-icon me-3">🍽️</span>
+        Explore Food Categories
+      </h2>
+      <p class="section-subtitle text-muted">
+        Discover delicious meals from various categories around the world
+      </p>
+      <div class="title-divider mx-auto"></div>
+    </div>
+
+    <!-- Loading State -->
+    <div *ngIf="loading()" class="text-center py-5">
+      <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem">
+        <span class="visually-hidden">Loading categories...</span>
+      </div>
+      <p class="text-muted fs-5">Loading delicious categories...</p>
+    </div>
+
+    <!-- Error State -->
+    <div *ngIf="error() && !loading()" class="text-center py-5">
+      <div class="error-container">
+        <div class="error-icon mb-3">😕</div>
+        <h4 class="text-danger mb-3">Something went wrong</h4>
+        <p class="text-muted mb-4">{{ error() }}</p>
+        <button class="btn btn-primary px-4" (click)="retryLoading()">
+          <i class="bi bi-arrow-clockwise me-2"></i>
+          Try Again
+        </button>
+      </div>
+    </div>
+
+    <!-- Categories Slider -->
+    <div
+      *ngIf="!loading() && !error() && categories().length > 0"
+      class="slider-container position-relative"
+      (mouseenter)="pauseAutoSlide()"
+      (mouseleave)="resumeAutoSlide()"
+      (keydown)="onKeyboardNavigation($event)"
+      tabindex="0"
+      role="region"
+      aria-label="Food categories carousel"
+    >
+      <!-- Navigation Buttons -->
+      <button
+        class="slider-nav prev-btn"
+        (click)="previousSlide()"
+        [disabled]="currentSlide() === 0 && maxSlide() === 0"
+        [attr.aria-label]="'Previous ' + slidesToShow() + ' categories'"
+      >
+        <i class="fa-solid fa-arrow-left"></i>
+      </button>
+
+      <button
+        class="slider-nav next-btn"
+        (click)="nextSlide()"
+        [disabled]="currentSlide() >= maxSlide() && maxSlide() === 0"
+        [attr.aria-label]="'Next ' + slidesToShow() + ' categories'"
+      >
+        <i class="fa-solid fa-arrow-right"></i>
+      </button>
+
+      <!-- Slider Track -->
+      <div class="slider-wrapper overflow-hidden rounded-3">
+        <div
+          class="slider-track d-flex"
+          [style.transform]="'translateX(-' + currentSlide() * slideWidth() + '%)'"
+        >
+          <!-- Category Cards -->
+          <div
+            *ngFor="let category of categories(); trackBy: trackByCategory"
+            class="category-slide"
+            [style.flex]="'0 0 ' + slideWidth() + '%'"
+          >
+            <div
+              class="category-card h-100 shadow-sm"
+              (click)="navigateToMeals(category)"
+              (keydown.enter)="navigateToMeals(category)"
+              (keydown.space)="navigateToMeals(category)"
+              tabindex="0"
+              role="button"
+              [attr.aria-label]="'View ' + category.strCategory + ' meals'"
+            >
+              <!-- Category Image -->
+              <div class="card-image-container position-relative overflow-hidden">
+                <img
+                  [src]="category.strCategoryThumb"
+                  [alt]="category.strCategory"
+                  class="card-image w-100"
+                  loading="lazy"
+                  (error)="onImageError($event)"
+                />
+
+                <!-- Hover Overlay -->
+                <div
+                  class="card-overlay position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+                >
+                  <div class="overlay-content text-center text-white">
+                    <i class="bi bi-arrow-right-circle fs-1 mb-2"></i>
+                    <p class="fw-semibold mb-0">Explore</p>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Category Info -->
+              <div class="card-body">
+                <h5 class="card-title mb-2 fw-bold">{{ category.strCategory }}</h5>
+                <p class="card-text text-muted small">
+                  {{ truncateText(category.strCategoryDescription, 80) }}
+                </p>
+
+                <!-- Category Badge -->
+                <div class="d-flex justify-content-between align-items-center mt-3">
+                  <span class="badge bg-primary rounded-pill">
+                    <i class="bi bi-collection me-1"></i>
+                    Category
+                  </span>
+                  <i class="bi bi-arrow-right text-primary"></i>
+                </div>
+              </div>
+
+              <!-- Card Shine Effect -->
+              <div class="card-shine position-absolute top-0 start-0 w-100 h-100"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slider Indicators -->
+      <div
+        class="slider-indicators d-flex justify-content-center mt-4 gap-2"
+        *ngIf="maxSlide() > 0"
+      >
+        <button
+          *ngFor="let indicator of getSlideIndicators(); trackBy: trackByIndex"
+          class="indicator-dot rounded-circle border-0"
+          [class.active]="indicator === currentSlide()"
+          (click)="goToSlide(indicator)"
+          [attr.aria-label]="'Go to slide ' + (indicator + 1)"
+          [attr.aria-current]="indicator === currentSlide() ? 'true' : 'false'"
+        ></button>
+      </div>
+
+      <!-- Progress Bar -->
+      <div class="slider-progress mt-3" *ngIf="maxSlide() > 0">
+        <div class="progress" style="height: 4px">
+          <div
+            class="progress-bar bg-primary"
+            role="progressbar"
+            [style.width]="getProgressPercentage() + '%'"
+            [attr.aria-valuenow]="currentSlide() + 1"
+            [attr.aria-valuemin]="1"
+            [attr.aria-valuemax]="maxSlide() + 1"
+          ></div>
+        </div>
+      </div>
+
+      <!-- Slide Counter -->
+      <div class="slide-counter text-center mt-2 small text-muted">
+        {{ currentSlide() + 1 }} / {{ maxSlide() + 1 }}
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div *ngIf="!loading() && !error() && categories().length === 0" class="text-center py-5">
+      <div class="empty-state">
+        <div class="empty-icon mb-4">🍽️</div>
+        <h4 class="text-muted mb-3">No Categories Found</h4>
+        <p class="text-muted mb-4">We couldn't find any meal categories at the moment.</p>
+        <button class="btn btn-outline-primary px-4" (click)="retryLoading()">
+          <i class="bi bi-arrow-clockwise me-2"></i>
+          Refresh Categories
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

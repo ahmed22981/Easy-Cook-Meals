@@ -4,6 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
 import { Category, CategoriesComponent } from '../categories/categories';
 import { FormsModule } from '@angular/forms';
+import { MealsService } from '../../services/mealsService'; // Import MealsService
 
 @Component({
   selector: 'app-home',
@@ -16,7 +17,11 @@ export class Home implements OnInit {
 
   isLoggedIn = false;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router,
+    private authService: AuthService,
+    public mealsService: MealsService // Inject MealsService as public
+  ) {
     this.isLoggedIn = this.authService.isAuthenticated();
   }
 
@@ -30,7 +35,7 @@ export class Home implements OnInit {
 
   logout() {
     this.authService.logout();
-    this.isLoggedIn = false; // حدث الحالة
+    this.isLoggedIn = false;
     this.router.navigate(['/']);
   }
 

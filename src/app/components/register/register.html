@@ -1,6 +1,4 @@
-<!-- Register/Login Component Template -->
 <div class="auth-container">
-  <!-- Background Elements -->
   <div class="background-decoration">
     <div class="floating-shape shape-1"></div>
     <div class="floating-shape shape-2"></div>
@@ -9,9 +7,7 @@
     <div class="gradient-orb orb-2"></div>
   </div>
 
-  <!-- Main Content -->
   <div class="auth-content">
-    <!-- Left Panel - Brand Info -->
     <div class="brand-panel">
       <div class="brand-content">
         <div class="logo-section">
@@ -46,24 +42,41 @@
       </div>
     </div>
 
-    <!-- Right Panel - Auth Form -->
     <div class="form-panel">
       <div class="form-container">
-        <!-- Form Header -->
+        <div class="test-credentials-box" *ngIf="isLogin">
+          <div class="hint-icon">💡</div>
+          <div class="hint-content">
+            <h4>Test Account Credentials</h4>
+            <p>Use these details to test the login functionality:</p>
+            <div class="credentials-grid">
+              <div class="cred-item">
+                <span class="label">Username:</span>
+                <span class="value select-all">emilys</span>
+              </div>
+              <div class="cred-item">
+                <span class="label">Password:</span>
+                <span class="value select-all">emilyspass</span>
+              </div>
+            </div>
+            <button type="button" class="fill-btn" (click)="fillTestCredentials()">
+              Auto-fill Credentials
+            </button>
+          </div>
+        </div>
+
         <div class="form-header">
           <h2 class="form-title">{{ modeTitle() }}</h2>
           <p class="form-subtitle">{{ modeSubtitle() }}</p>
         </div>
 
-        <!-- Error Message -->
         <div class="error-message" *ngIf="error">
           <div class="error-content">
-            <span class="error-icon"></span>
+            <span class="error-icon">⚠️</span>
             <span>{{ error }}</span>
           </div>
         </div>
 
-        <!-- Login Form -->
         <form *ngIf="isLogin" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="auth-form">
           <div class="form-group">
             <label for="login-username" class="form-label">Username</label>
@@ -100,7 +113,9 @@
                 class="toggle-password"
                 (click)="togglePasswordVisibility()"
                 [attr.aria-label]="passwordVisible ? 'Hide password' : 'Show password'"
-              ></button>
+              >
+                {{ passwordVisible ? '👁️' : '👁️‍🗨️' }}
+              </button>
             </div>
             <div class="field-error" *ngIf="isFieldInvalid(loginForm, 'password')">
               {{ getFieldError(loginForm, 'password') }}
@@ -129,7 +144,6 @@
           </button>
         </form>
 
-        <!-- Signup Form -->
         <form *ngIf="!isLogin" [formGroup]="signupForm" (ngSubmit)="onSignup()" class="auth-form">
           <div class="form-row">
             <div class="form-group">
@@ -229,11 +243,9 @@
                 placeholder="Create a password"
                 autocomplete="new-password"
               />
-              <button
-                type="button"
-                class="toggle-password"
-                (click)="togglePasswordVisibility()"
-              ></button>
+              <button type="button" class="toggle-password" (click)="togglePasswordVisibility()">
+                {{ passwordVisible ? '👁️' : '👁️‍🗨️' }}
+              </button>
             </div>
             <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'password')">
               {{ getFieldError(signupForm, 'password') }}
@@ -258,7 +270,9 @@
                 type="button"
                 class="toggle-password"
                 (click)="toggleConfirmPasswordVisibility()"
-              ></button>
+              >
+                {{ confirmPasswordVisible ? '👁️' : '👁️‍🗨️' }}
+              </button>
             </div>
             <div class="field-error" *ngIf="isFieldInvalid(signupForm, 'confirmPassword')">
               {{ getFieldError(signupForm, 'confirmPassword') }}
@@ -282,7 +296,6 @@
           </button>
         </form>
 
-        <!-- Mode Toggle -->
         <div class="form-footer">
           <button type="button" class="toggle-mode-button" (click)="toggleMode()">
             {{ toggleText() }}

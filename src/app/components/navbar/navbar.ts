@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth';
+import { MealsService } from '../../services/mealsService';
 
 @Component({
   selector: 'app-navbar',
@@ -11,7 +12,8 @@ import { AuthService } from '../../services/auth';
   styleUrl: './navbar.css',
 })
 export class Navbar {
-  constructor(private authService: AuthService) {}
+  // Inject MealsService as public so we can use it in the HTML
+  constructor(private authService: AuthService, public mealsService: MealsService) {}
 
   logout() {
     this.authService.logout();

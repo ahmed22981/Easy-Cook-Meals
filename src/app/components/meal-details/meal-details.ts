@@ -28,12 +28,10 @@ export class MealDetails implements OnInit, OnDestroy {
   meal: Meal | null = null;
   ingredients: Ingredient[] = [];
   youtubeUrl: SafeResourceUrl | null = null;
-  favorites: Set<string> = new Set();
   loading$ = this.loadingService.loading$;
   error: string | null = null;
 
   ngOnInit() {
-    this.loadFavorites();
     this.route.params.pipe(takeUntil(this.destroy$)).subscribe((params) => {
       const mealId = params['id'];
       if (mealId) {
@@ -57,7 +55,8 @@ export class MealDetails implements OnInit, OnDestroy {
         next: (meal: Meal | null) => {
           if (meal) {
             this.meal = meal;
-            this.meal.isFavorite = this.favorites.has(meal.idMeal);
+            const currentFavorites = this.mealsService.favorites();
+            this.meal.isFavorite = currentFavorites.includes(meal.idMeal);
             this.extractIngredients(meal);
             this.extractYoutubeUrl(meal.strYoutube);
           } else {
@@ -93,7 +92,6 @@ export class MealDetails implements OnInit, OnDestroy {
       return;
     }
 
-    // Extract video ID from various YouTube URL formats
     let videoId = '';
     const regExp = /^.*((youtu.be\/)|(v\/)|(\/u\/\w\/)|(embed\/)|(watch\?))\??v?=?([^#&?]*).*/;
     const match = youtubeUrl.match(regExp);
@@ -111,25 +109,14 @@ export class MealDetails implements OnInit, OnDestroy {
   toggleFavorite() {
     if (!this.meal) return;
 
-    if (this.favorites.has(this.meal.idMeal)) {
-      this.favorites.delete(this.meal.idMeal);
+    const currentFavorites = this.mealsService.favorites();
+
+    if (currentFavorites.includes(this.meal.idMeal)) {
+      this.mealsService.removeFavorite(this.meal.idMeal);
       this.meal.isFavorite = false;
     } else {
-      this.favorites.add(this.meal.idMeal);
+      this.mealsService.addFavorite(this.meal.idMeal);
       this.meal.isFavorite = true;
-    }
-
-    this.saveFavorites();
-  }
-
-  private saveFavorites() {
-    localStorage.setItem('mealFavorites', JSON.stringify([...this.favorites]));
-  }
-
-  private loadFavorites() {
-    const saved = localStorage.getItem('mealFavorites');
-    if (saved) {
-      this.favorites = new Set(JSON.parse(saved));
     }
   }
 

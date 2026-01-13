@@ -131,16 +131,72 @@ header nav .form {
   margin-left: 15px;
   border-left: 1px solid white;
 }
-header nav .form i {
+
+/* --- UPDATED FAVORITES STYLES --- */
+.fav-container {
+  display: block;
   position: absolute;
   right: 0;
   top: 50%;
   transform: translateY(-50%);
-  font-size: 20px;
   color: white;
-  cursor: pointer;
+  text-decoration: none;
 }
+
+.fav-container:hover {
+  color: var(--main-color);
+}
+
+/* 1. Made the Star Icon Bigger */
+header nav .form i {
+  font-size: 26px; /* Increased from 20px */
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.fav-container:hover i {
+  transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+/* 2. Made the Badge Bigger */
+.badge {
+  position: absolute;
+  top: -8px; /* Adjusted position */
+  right: -10px; /* Adjusted position */
+  background-color: #ff4d4f;
+  color: white;
+
+  /* Bigger Font & Box */
+  font-size: 12px; /* Increased from 10px */
+  height: 20px; /* Increased from 16px */
+  min-width: 20px; /* Increased from 16px */
+
+  font-weight: bold;
+  padding: 0 4px;
+  border-radius: 12px; /* Slightly more rounded */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #1f2021; /* Dark border to separate it from the background */
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+@keyframes popIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+/* -------------------------------- */
+
 /* End Header */
+
 /* Start Landing */
 .landing {
   min-height: 100vh;

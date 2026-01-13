@@ -16,7 +16,7 @@ import { LoginRequest, SignupRequest } from '../../models/user';
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, FormsModule],
   templateUrl: './register.html',
-  styleUrls: ['./register.css'], // ✅ fix (styleUrl → styleUrls)
+  styleUrls: ['./register.css'],
 })
 export class Register {
   // Signals
@@ -116,6 +116,14 @@ export class Register {
     this.showConfirmPassword.set(!this.showConfirmPassword());
   }
 
+  // ======== Helper to Fill Test Credentials ========
+  fillTestCredentials(): void {
+    this.loginForm.patchValue({
+      username: 'emilys',
+      password: 'emilyspass',
+    });
+  }
+
   // ======== Submit ========
   onSubmit(): void {
     if (this.isLoginMode()) {
@@ -125,27 +133,6 @@ export class Register {
     }
   }
 
-  // onLogin(): void {
-  //   console.log(this.returnUrl);
-  //   if (this.loginForm.valid) {
-  //     const loginData: LoginRequest = {
-  //       username: this.loginForm.value.username,
-  //       password: this.loginForm.value.password,
-  //       expiresInMins: this.loginForm.value.rememberMe ? 1440 : 30,
-  //     };
-
-  //     this.authService.login(loginData).subscribe({
-  //       next: () => {
-  //         this.router.navigateByUrl('/'); // ✅ redirect fix
-  //       },
-  //       error: (error) => {
-  //         console.error('Login failed:', error);
-  //       },
-  //     });
-  //   } else {
-  //     this.markFormGroupTouched(this.loginForm);
-  //   }
-  // }
   onLogin(): void {
     console.log('Return URL:', this.returnUrl);
 
@@ -158,28 +145,15 @@ export class Register {
 
       this.authService.login(loginData).subscribe({
         next: (res) => {
-          console.log('🔑 Login response:', res);
-
-          // ✅ خزن الـ accessToken و user info
-          if (res.accessToken) {
-            localStorage.setItem('easycook_token', res.accessToken);
-            localStorage.setItem(
-              'easycook_user',
-              JSON.stringify({
-                id: res.id,
-                username: res.username,
-                email: res.email,
-              })
-            );
-          } else {
-            console.warn('⚠️ No accessToken found in response');
-          }
-
-          // ✅ اعادة التوجيه
-          this.router.navigateByUrl(this.returnUrl || '/');
+          console.log('✅ Login successful:', res);
+          // LocalStorage and Redirect are handled by the AuthService's handleAuthSuccess method
+          // But as a fallback in case your service doesn't redirect automatically:
+          // this.router.navigateByUrl(this.returnUrl || '/');
         },
         error: (error) => {
           console.error('❌ Login failed:', error);
+          // If you want to show a browser alert for debugging:
+          // alert('Login failed. Please check credentials.');
         },
       });
     } else {
@@ -201,7 +175,7 @@ export class Register {
 
       this.authService.signup(signupData).subscribe({
         next: () => {
-          this.router.navigateByUrl(this.returnUrl || '/'); // ✅ redirect fix
+          this.router.navigateByUrl(this.returnUrl || '/');
         },
         error: (error) => {
           console.error('Signup failed:', error);
@@ -211,6 +185,7 @@ export class Register {
       this.markFormGroupTouched(this.signupForm);
     }
   }
+
   // ======== Helpers ========
   private markFormGroupTouched(formGroup: FormGroup): void {
     Object.keys(formGroup.controls).forEach((key) => {

@@ -1,4 +1,3 @@
-<!-- Start Header -->
 <header>
   <div class="container">
     <a routerLink="" class="logo"> Easy cook </a>
@@ -16,16 +15,19 @@
           <button class="auth-btn logout-btn" (click)="logout()">Logout</button>
         </li>
       </ul>
+
       <div class="form">
-        <a routerLink="favorites">
+        <a routerLink="favorites" class="fav-container">
           <i class="fa-regular fa-star"></i>
+
+          <span class="badge" *ngIf="mealsService.favorites().length > 0">
+            {{ mealsService.favorites().length }}
+          </span>
         </a>
       </div>
     </nav>
   </div>
 </header>
-<!-- End Header -->
-
 <div class="landing">
   <div class="overlay"></div>
   <div class="text" #landingText>
@@ -43,4 +45,3 @@
 </div>
 
 <app-categories></app-categories>
-<!-- End Landing -->
